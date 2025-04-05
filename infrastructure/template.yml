@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless API for Portfolio Website - Get Commits
+
+Resources:
+  GetCommitsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../lambda-functions/get-commits/
+      Handler: index.lambda_handler
+      Runtime: python3.9 # or your preferred runtime
+      Environment:
+        Variables:
+          GITHUB_OWNER: your-github-owner
+          GITHUB_REPO: your-github-repo
+          # GITHUB_TOKEN: your-github-token (Optional, use secrets manager best practice)
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /commits
+            Method: get
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway URL"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/commits"
